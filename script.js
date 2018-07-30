@@ -1,5 +1,6 @@
 $(document).ready(() => {
-    var baseURL = "https://api.weather.gov/";  
+    var baseURLWeather = "https://api.weather.gov/";  
+    var baseURLSunset  = "https://api.sunrise-sunset.org/json?"; 
     setInterval(printDate, 1000);
     getNewData();
     setInterval(getNewData, 1000*60*60);
@@ -18,20 +19,28 @@ $(document).ready(() => {
     function showPosition(position){
        var lati = position.coords.latitude;
        var longi = position.coords.longitude;
-       var posit = baseURL+"points/"+lati+","+longi;
-       console.log(posit);
-       $.getJSON(posit, function(data){
+       var weatherLoc = baseURLWeather + 'points/' + lati + ',' + longi;
+       var sunsetLoc  = baseURLSunset +'lat=' + lati + '&lng=' + longi + '&date=today';
+       console.log(sunsetLoc)
+       getSunset(sunsetLoc);
+       $.getJSON("config.json", function(data){
+           console.log(data);
+       });
+       getForecast(weatherLoc);
+    }
+    function errored(){
+        console.log("broken");
+    } 
+    function getForecast(forecastLink){
+        $.getJSON(forecastLink, function(data){
            var location = data.properties.relativeLocation.properties;
            var properties = data.properties;
            $('#city').text("City is: "+location.city);
            $('#state').text("State is: "+ location.state);
            forecastPrintout(properties.forecast);
-           
-       }) 
+           hourlyPrintout(properties.forecastHourly);           
+        }) 
     }
-    function errored(){
-        console.log("broken");
-    } 
     function forecastPrintout(forecastLink){
         $.getJSON(forecastLink, function(data){
             var forecasts = data.properties.periods;
@@ -53,7 +62,44 @@ $(document).ready(() => {
     }
     function hourlyPrintout(hourlyForecastLink){
         $.getJSON(hourlyForecastLink, function(data){
-            console.log(data);
+            var periods = data.properties.periods;
+            var hourlyDiv = $('#hourly');
+            for(var i=0; i<24; i++){
+                var currentHourlyData = periods[i]; 
+                var currentHour = convert24to12(currentHourlyData.startTime);
+                var hourBlock = "<div class='hourBlock' id='"+currentHour+"'></div>";
+                hourlyDiv.append(hourBlock);
+                hourBlock = $('#'+currentHour);
+                var hourText = "<h3 class='hourText'>"+currentHour + "</h3>";
+                var hourImage = "<img src='"+currentHourlyData.icon+"'></img>";
+                var hourTemp = "<h3 class='hourText'>"+currentHourlyData.temperature+"</h3>";
+                hourBlock.append(hourText);
+                hourBlock.append(hourImage);
+                hourBlock.append(hourTemp);
+            }
         });
     }       
+    function convert24to12(weatherTime){
+        var hour24 = Number(weatherTime.substring(11,13)); 
+        var period = getPeriod(hour24);
+        var hour12 = get12Hour(hour24); 
+        return hour12+period;
+    }
+    function getPeriod(hour){
+        return hour>=12?"pm":"am";
+    }
+    function get12Hour(hour24){
+        if(hour24==0){
+            return 12;
+        }else if(hour24>12){
+            return hour24-12;
+        }else{
+            return hour24;
+        }
+    }
+    function getSunset(sunsetLink){
+        $.getJSON(sunsetLink, function(data){
+            console.log(data);
+        });
+    }
 });

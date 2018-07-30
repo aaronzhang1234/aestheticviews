@@ -17,4 +17,19 @@ h3.dayTemp{
 img.dayImage{
     text-align:center;
 }
+div#hourly{
+    display:inline-block;
+}
+div.hourBlock{
+    margin-right:1vw;
+    display:inline-block;
+    width:10%;
+}
+h3.hourText{
+    text-align:center;
+    font-size:1vw;
+}
+img.hourImage{
+    text-align:center;
+}
 
