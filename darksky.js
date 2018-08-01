@@ -3,10 +3,9 @@ $(document).ready(() => {
     var currentInfo;
     setInterval(printDate, 1000);
     getNewData();
-    setInterval(getNewData, 1000*30); 
+    setInterval(getNewData, 1000*60*2); 
     $(window).on('resize', function(){
         updateSunLocation();
-        console.log("resized");
     });
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
     function printDate(){
@@ -25,7 +24,6 @@ $(document).ready(() => {
        var lati = position.coords.latitude;
        var longi = position.coords.longitude;
        $.getJSON("config.json", function(data){
-           console.log(data);
            var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + lati + "," + longi;
            var darkSkyURL = fuckCors + darkSkyURL; 
            getForecast(darkSkyURL); 
@@ -93,9 +91,7 @@ $(document).ready(() => {
         var centerDiv = $("#skyDisplay");
         centerDiv.append(moonImage);
         var moonImage = $('#moonImage');
-        console.log(centerPos);
         var moonWidth = moonImage.width()/4;
-        console.log(moonWidth);
         moonImage.css("top",centerPos.top-150);
         moonImage.css("left", centerPos.left-moonWidth);
     }
@@ -104,12 +100,25 @@ $(document).ready(() => {
         var centerPos = center.position();   
         var sunPercent = getSunPercentage(dailyInfo);
         const hypot = 6;
+        var sunLength;
+        var sunHeight;
+        console.log(sunPercent);
         if(sunPercent>90)
-        {
+        {            
             sunPercent = 180 - sunPercent;
+            sunLength = Math.cos(sunPercent*(Math.PI/180.0))*hypot;
+            sunHeight = Math.sqrt((Math.pow(hypot,2)-Math.pow(sunLength,2)));
         }
-        const sunLength = Math.cos(sunPercent*(Math.PI/180.0))*hypot;
-        const sunHeight = Math.sqrt((Math.pow(hypot,2)-Math.pow(sunLength,2)));
+        else
+        {
+            var sunRadians = sunPercent * (Math.PI/180);
+            sunLength = Math.cos(sunRadians)*hypot;
+            console.log(sunLength);
+            sunLength = sunLength*-1
+            console.log(sunLength);
+            sunHeight = Math.sqrt((Math.pow(hypot,2)-Math.pow(sunLength,2)));
+        }
+        console.log(sunHeight);
         var sunImage = "<img id='sunImage' src='images/sun.jpg'></img>";
         $('body').append(sunImage); 
         var killme = $('#sunImage');
