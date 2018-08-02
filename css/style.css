@@ -1,3 +1,8 @@
+html,body{
+    margin:0;
+    height:100%;
+    overflow:hidden;
+}
 h1{
     font-size:7vh;
 }
@@ -38,8 +43,5 @@ h1#time{
     height:auto;
     animation: marquee 15s linear infinite;
 }
-@keyframes marquee{
-    0%    {transform: translate(0, 0); }
-    100&  {transform: translate(-100%, 0);}
-}
+
 
