@@ -18,11 +18,28 @@ span#centersun{
 }
 img#sunImage{
     position:absolute;
-    height:5vw;
     width:5vw;
+    height:auto;
 }
 img#moonImage{
     position:absolute;
     width:5vw;
     height:auto;
 }
+h1#temperature{
+    font-family: 'Lato', sans-serif;
+}
+h1#time{
+    font-family: 'Lato', sans-serif;
+}
+.cloud{
+    position:absolute;
+    width:5vw;
+    height:auto;
+    animation: marquee 15s linear infinite;
+}
+@keyframes marquee{
+    0%    {transform: translate(0, 0); }
+    100&  {transform: translate(-100%, 0);}
+}
+

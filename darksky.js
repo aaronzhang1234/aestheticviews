@@ -1,13 +1,17 @@
 $(document).ready(() => { 
     var dailyInfo; 
     var currentInfo;
-    setInterval(printDate, 1000);
-    getNewData();
-    setInterval(getNewData, 1000*60*2); 
-    $(window).on('resize', function(){
-        updateSunLocation();
-    });
+    var currentClouds = 0;
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
+
+    setInterval(printDate, 1000);
+    setInterval(getNewData, 1000*60*2); 
+    getNewData();
+
+    $(window).on('resize', function(){
+        updateSunLocation(currentInfo,dailyInfo);
+    });
+
     function printDate(){
         var today = new Date().toLocaleTimeString();
         $('#time').text(today);
@@ -35,46 +39,57 @@ $(document).ready(() => {
     function getForecast(darkSkyURL){
         $.getJSON(darkSkyURL, function(data)
         {
-            var currently = data.currently;
+            var rightNow = data.currently;
             var today = data.daily.data[0];
             dailyInfo = today;
-            currentInfo = currently;
+            currentInfo = rightNow;
             console.log(today);
-            console.log(currently);            
-            updateSunLocation();
-            updateSkyColor();
-            updateTemperature();
-            shiftText();
+            console.log(rightNow);            
+            updateSunLocation(rightNow, today);
+            updateWeather(rightNow, today);
+            shiftText(today);
        });
     }
-    function updateSunLocation(){
+    function updateSunLocation(rightNow, today){
         $('#sunImage').remove();
         var center = $('#centersun');    
         var centerPos = center.position(); 
-        if(sunIsDown(dailyInfo))
+        if(sunIsDown(today))
         {  
             placeMoon();
         }
         else
         {
-            placeSun();
+            placeSun(rightNow, today);
         }
     }
-    function getSunPercentage(todayInfo){
-        var totalSunUpness = todayInfo.sunsetTime - todayInfo.sunriseTime;
+    function updateWeather(rightNow, today){
+        updateTemperature(rightNow);
+        updateSkyColor(rightNow, today);
+        var numOfClouds = Math.ceil((rightNow.cloudCover) *100);
+        if(numOfClouds > currentClouds+5 || numOfClouds < currentClouds-5){
+            currentClouds = numOfClouds;
+            $('.cloud').remove();
+            for(numOfClouds; numOfClouds>0; numOfClouds--){
+               placeCloud(numOfClouds);
+            }
+        }
+    }
+    function getSunPercentage(today){
+        var totalSunUpness = today.sunsetTime - today.sunriseTime;
         var timeRightNow = (new Date().getTime())/1000;
-        var timeElapsed = timeRightNow - todayInfo.sunriseTime;
+        var timeElapsed = timeRightNow - today.sunriseTime;
         var sunpercentage = timeElapsed/totalSunUpness;
         return sunpercentage * 180;
     }
-    function getSolarNoon(todayInfo){
+    function getSolarNoon(today){
         var solarnoon = new Date(0);
-        solarnoon.setUTCSeconds((todayInfo.sunsetTime + todayInfo.sunriseTime) /2);
+        solarnoon.setUTCSeconds((today.sunsetTime + todayInfo.sunriseTime) /2);
     }
-    function sunIsDown(todayInfo){
+    function sunIsDown(today){
         var timeRightNow = new Date();
         var seconds = (timeRightNow.getTime())/1000;
-        if(seconds > todayInfo.sunsetTime || seconds < todayInfo.sunriseTime)
+        if(seconds > today.sunsetTime || seconds < today.sunriseTime)
         {
             return true;
         }
@@ -95,14 +110,13 @@ $(document).ready(() => {
         moonImage.css("top",centerPos.top-150);
         moonImage.css("left", centerPos.left-moonWidth);
     }
-    function placeSun(){
+    function placeSun(rightNow, today){
         var center = $('#centersun');    
         var centerPos = center.position();   
-        var sunPercent = getSunPercentage(dailyInfo);
+        var sunPercent = getSunPercentage(today);
         const hypot = 6;
         var sunLength;
         var sunHeight;
-        console.log(sunPercent);
         if(sunPercent>90)
         {            
             sunPercent = 180 - sunPercent;
@@ -113,22 +127,19 @@ $(document).ready(() => {
         {
             var sunRadians = sunPercent * (Math.PI/180);
             sunLength = Math.cos(sunRadians)*hypot;
-            console.log(sunLength);
             sunLength = sunLength*-1
-            console.log(sunLength);
             sunHeight = Math.sqrt((Math.pow(hypot,2)-Math.pow(sunLength,2)));
         }
-        console.log(sunHeight);
-        var sunImage = "<img id='sunImage' src='images/sun.jpg'></img>";
+        var sunImage = "<img id='sunImage' src='images/sun.png'></img>";
         $('body').append(sunImage); 
         var killme = $('#sunImage');
         var sunWidth = killme.width()/2;
         killme.css("top",centerPos.top-sunHeight*50);
         killme.css("left", centerPos.left+((sunLength*50)-sunWidth));
     }
-    function updateSkyColor(){
+    function updateSkyColor(rightNow, today){
         var skyDisplay = $("#skyDisplay"); 
-        if(sunIsDown(dailyInfo))
+        if(sunIsDown(today))
         {
             skyDisplay.css("background-color","black");
         }
@@ -145,18 +156,28 @@ $(document).ready(() => {
                              "9cb0ba",
                              "a2acb2",
                              "a9a9a9"];
-            var cloudCover = currentInfo.cloudCover; 
+            var cloudCover = rightNow.cloudCover; 
             var skyColorBasedOnClouds = Math.floor(cloudCover*10);
             var currentSkyColor = skyColors[skyColorBasedOnClouds];
             skyDisplay.css("background-color","#"+currentSkyColor);
         }
     }
-    function updateTemperature(){
-        var temperature = currentInfo.temperature;
+    function updateTemperature(rightNow){
+        var temperature = rightNow.temperature;
         $('#temperature').text(temperature);
     }
-    function shiftText(){
-        if(sunIsDown(dailyInfo))
+    function placeCloud(numOfClouds){
+        var cloudID = "cloud" + numOfClouds;
+        var cloudImage = "<img class='cloud' id='"+ cloudID +"' src='images/cloud.png'></img>";
+        $('#skyDisplay').append(cloudImage);
+        cloudImage = $('#'+cloudID);
+        var cloudHorzPos = (Math.random() * 20) +40;
+        var cloudVertPos = (Math.random() * 100);
+        cloudImage.css("top", cloudHorzPos + "vh");
+        cloudImage.css("left", cloudVertPos + "vw");
+    }
+    function shiftText(today){
+        if(sunIsDown(today))
         {
             $("#time").css("color","white");
             $("#temperature").css("color","white");
