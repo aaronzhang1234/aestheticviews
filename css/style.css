@@ -47,9 +47,10 @@ h2#hourlyMinMax{
 svg.chart{
     position:absolute;
     top = 70vh;
-    left: 39vw; 
+    left:0;
+    right:0;
+    margin:auto;
     text-align:center;
-    width:50%;
     border-bottom: 2px dotted #555;
 }
 .cloud{
