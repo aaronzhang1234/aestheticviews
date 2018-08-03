@@ -37,11 +37,29 @@ h1#temperature{
 h1#time{
     font-family: 'Lato', sans-serif;
 }
+h2#hourlyMinMax{
+    position:absolute;
+    font-family: 'Lato', sans-serif;
+    left:0;
+    right:0;
+    margin:auto;
+}
+svg.chart{
+    position:absolute;
+    top = 70vh;
+    left: 39vw; 
+    text-align:center;
+    width:50%;
+    border-bottom: 2px dotted #555;
+}
 .cloud{
     position:absolute;
     width:5vw;
     height:auto;
     animation: marquee 15s linear infinite;
+}
+#hourlyTemps{
+    stroke:black;
 }
 
 

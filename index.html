@@ -9,12 +9,35 @@
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet">
     <script src="darksky.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 </head>
 
 <body>
     <div id="skyDisplay">
         <h1 id = "time"></h1>
         <h1 id = "temperature"></h1>
+        <svg class='chart'>
+          <title>MEMES</title>
+            <polyline 
+              id="hourlyTemps"
+              fill="none";
+              points="
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00
+                00,00"
+            />
+            <h2 id ="hourlyMinMax">hello</h1>
+        </svg>
+
         <span id = "centersun"></span>
     </div>
 </body>

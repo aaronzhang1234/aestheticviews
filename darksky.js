@@ -41,17 +41,20 @@ $(document).ready(() => {
         {
             var rightNow = data.currently;
             var today = data.daily.data[0];
+            var hourly = data.hourly.data;
             dailyInfo = today;
             currentInfo = rightNow;
             console.log(today);
-            console.log(rightNow);            
+            console.log(rightNow);     
             updateSunLocation(rightNow, today);
             updateWeather(rightNow, today);
+            updateHourly(hourly);
             shiftText(today);
        });
     }
     function updateSunLocation(rightNow, today){
         $('#sunImage').remove();
+        $('#moonImage').remove();
         var center = $('#centersun');    
         var centerPos = center.position(); 
         if(sunIsDown(today))
@@ -164,7 +167,7 @@ $(document).ready(() => {
     }
     function updateTemperature(rightNow){
         var temperature = rightNow.temperature;
-        $('#temperature').text(temperature);
+        $('#temperature').text(temperature+ String.fromCharCode(176));
     }
     function placeCloud(numOfClouds){
         var cloudID = "cloud" + numOfClouds;
@@ -176,19 +179,69 @@ $(document).ready(() => {
         cloudImage.css("top", cloudHorzPos + "vh");
         cloudImage.css("left", cloudVertPos + "vw");
     }
+    function updateHourly(hourly){
+        var hourlyChart = $('#hourlyTemps');
+        console.log(hourlyChart[0].points);
+        var hourlyPoints = hourlyChart[0].points;
+        var max = getMaxTemp(hourly);
+        var min = getMinTemp(hourly);
+        var range = max-min;
+        var multiplier = 100/range;
+        var maxminMessage = "MAX:"+max+ " MIN:"+min; 
+        console.log(hourly);
+        for(var i = 0; i<12; i++){ 
+            var hourTemp = Math.floor(hourly[i].temperature);
+            var hourTempforChart = (max - hourTemp) * multiplier;
+            hourlyPoints[i].y = hourTempforChart;
+            hourlyPoints[i].x = i*20;
+        }
+        $("#hourlyMinMax").text(maxminMessage); 
+        hourlyChartRect = $('#hourlyTemps')[0].getBoundingClientRect();
+        var svgChart = $(".chart")[0].getBoundingClientRect();
+        var hourlyBot = hourlyChartRect.bottom;
+        var svgBot    = svgChart.bottom;
+        var diff = svgBot-hourlyBot;
+        $('.chart').css("width", hourlyChartRect.width);
+        $('#hourlyMinMax').css("top", hourlyBot + (diff/2));
+
+    }
+    function getMaxTemp(hourly){
+        var max = -99;
+        for(var i = 0; i<12; i++){
+            var temp = Math.floor(hourly[i].temperature);
+            if(temp>max){
+                max = temp;
+            }
+        }
+        return max;
+    }
+    function getMinTemp(hourly){
+        var min = 1000;
+        for(var i = 0; i<12; i++){
+            var temp = Math.floor(hourly[i].temperature);
+            if(temp<min){
+                min = temp;
+            }
+        }
+        return min;
+
+    }
     function shiftText(today){
         if(sunIsDown(today))
         {
-            $("#time").css("color","white");
-            $("#temperature").css("color","white");
+            $("#time").css("color", "white");
+            $("#temperature").css("color", "white");
             $("#centersun").css("background-color","white");
+            $("#hourlyTemps").css("stroke","white");
+            $('#hourlyMinMax').css("color", "white");
         }
         else
         {
             $("#time").css("color","black");
             $("#temperature").css("color","black");
             $("#centersun").css("background-color","black");
-
+            $("#hourlyTemps").css("stroke","black");
+            $('#hourlyMinMax').css("color", "black");
         }
     }
 });
