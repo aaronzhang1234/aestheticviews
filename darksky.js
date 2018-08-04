@@ -3,9 +3,10 @@ $(document).ready(() => {
     var currentInfo;
     var currentClouds = 0;
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
-
+    var rainInterval;
+    var rainArray;
     setInterval(printDate, 1000);
-    setInterval(getNewData, 1000*60*2); 
+    setInterval(getNewData, 1000*60*10); 
     getNewData();
 
     $(window).on('resize', function(){
@@ -69,7 +70,9 @@ $(document).ready(() => {
     function updateWeather(rightNow, today){
         updateTemperature(rightNow);
         updateSkyColor(rightNow, today);
-        var numOfClouds = Math.ceil((rightNow.cloudCover) *100);
+        updateRain(rightNow.precipIntensity*10000);
+        console.log(rightNow.precipIntensity*10000);
+        var numOfClouds = Math.ceil((rightNow.cloudCover) *100)*2;
         if(numOfClouds > currentClouds+5 || numOfClouds < currentClouds-5){
             currentClouds = numOfClouds;
             $('.cloud').remove();
@@ -110,7 +113,8 @@ $(document).ready(() => {
         centerDiv.append(moonImage);
         var moonImage = $('#moonImage');
         var moonWidth = moonImage.width()/4;
-        moonImage.css("top",centerPos.top-150);
+        var windowHeight = (window.innerHeight)/2;
+        moonImage.css("top", windowHeight);
         moonImage.css("left", centerPos.left-moonWidth);
     }
     function placeSun(rightNow, today){
@@ -144,7 +148,7 @@ $(document).ready(() => {
         var skyDisplay = $("#skyDisplay"); 
         if(sunIsDown(today))
         {
-            skyDisplay.css("background-color","black");
+            skyDisplay.css("background-color","#061928");
         }
         else
         {
@@ -181,14 +185,12 @@ $(document).ready(() => {
     }
     function updateHourly(hourly){
         var hourlyChart = $('#hourlyTemps');
-        console.log(hourlyChart[0].points);
         var hourlyPoints = hourlyChart[0].points;
         var max = getMaxTemp(hourly);
         var min = getMinTemp(hourly);
         var range = max-min;
         var multiplier = 100/range;
         var maxminMessage = "MAX:"+max+ " MIN:"+min; 
-        console.log(hourly);
         for(var i = 0; i<12; i++){ 
             var hourTemp = Math.floor(hourly[i].temperature);
             var hourTempforChart = (max - hourTemp) * multiplier;
@@ -226,7 +228,9 @@ $(document).ready(() => {
         return min;
 
     }
-    function shiftText(today){
+    function shiftText(today){         
+        var canvas = $('#raining')[0];
+        var canvas2D = canvas.getContext('2d');
         if(sunIsDown(today))
         {
             $("#time").css("color", "white");
@@ -234,6 +238,7 @@ $(document).ready(() => {
             $("#centersun").css("background-color","white");
             $("#hourlyTemps").css("stroke","white");
             $('#hourlyMinMax').css("color", "white");
+            canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
         }
         else
         {
@@ -242,6 +247,60 @@ $(document).ready(() => {
             $("#centersun").css("background-color","black");
             $("#hourlyTemps").css("stroke","black");
             $('#hourlyMinMax').css("color", "black");
+            canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
+        }
+    }
+    function updateRain(rainIntense){
+        var canvas = $('#raining')[0];
+        var canvas2D = canvas.getContext('2d');
+        canvas2D.lineWidth = 1;
+        canvas2D.lineCap = 'round';
+//        canvas2D.strokeStyle = 'rgba(174, 194, 224, 0.5)';
+        var rainHeight = window.innerHeight;
+        var rainWidth = window.innerWidth;
+        rainArray = getRainArray(rainIntense, rainHeight, rainWidth);
+        if(rainInterval){
+            clearInterval(rainInterval);
+        }
+        else
+        {
+        }
+        rainInterval = setInterval(placeRain, 10, canvas2D, rainHeight, rainWidth);
+    }
+    function getRainArray(rainIntense, rainHeight, rainWidth){
+        var rainArrayTemp = [];
+        for(var i =0; i < rainIntense; i++){
+            rainArrayTemp.push({
+                x  : Math.random() * rainWidth,
+                y  : Math.random() * rainHeight,
+                l  : Math.random() * 1,
+                xs : -4 + Math.random() * 4 +2,
+                ys : Math.random() * 10 + 10
+            });
+        }
+        return rainArrayTemp;
+    }
+    function placeRain(canvas, rainHeight, rainWidth){
+        canvas.clearRect(0, 0, rainWidth, rainHeight);
+        for(var i = 0; i< rainArray.length; i++){
+            var rainDroplet = rainArray[i];
+            canvas.beginPath();
+            canvas.moveTo(rainDroplet.x, rainDroplet.y);
+            canvas.lineTo(rainDroplet.x + rainDroplet.l * rainDroplet.xs, rainDroplet.y + rainDroplet.l * rainDroplet.ys);
+            canvas.stroke();
+        }
+        moveRain(rainHeight, rainWidth);
+    }
+    function moveRain(rainHeight, rainWidth ){
+        for(var i = 0; i<rainArray.length; i++)
+        {
+            var rainDroplet = rainArray[i];
+            rainDroplet.x += rainDroplet.xs;
+            rainDroplet.y += rainDroplet.ys;
+            if(rainDroplet.x > rainWidth || rainDroplet.y > rainHeight*2){
+                rainDroplet.x = Math.random() * rainWidth;
+                rainDroplet.y = -20;
+            }
         }
     }
 });

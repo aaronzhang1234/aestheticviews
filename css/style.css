@@ -4,9 +4,12 @@ html,body{
     overflow:hidden;
 }
 h1{
+    position:relative;
+    z-index: 2;
     font-size:7vh;
 }
 div#skyDisplay{
+    z-index : -1;
     position:relative;
     text-align:center;
     height:100vh;
@@ -37,6 +40,9 @@ h1#temperature{
 h1#time{
     font-family: 'Lato', sans-serif;
 }
+h2{
+    z-index:2;
+}
 h2#hourlyMinMax{
     position:absolute;
     font-family: 'Lato', sans-serif;
@@ -45,6 +51,7 @@ h2#hourlyMinMax{
     margin:auto;
 }
 svg.chart{
+    z-index : 2;
     position:absolute;
     top = 70vh;
     left:0;
@@ -62,5 +69,12 @@ svg.chart{
 #hourlyTemps{
     stroke:black;
 }
-
+#raining{ 
+    position:absolute;
+    right:0;
+    bottom:0;
+    background-color:#061928;
+    height:100vh;
+    width:100vw;
+}
 
