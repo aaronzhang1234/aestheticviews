@@ -11,6 +11,7 @@ $(document).ready(() => {
 
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
+        placeMinMax();
     });
 
     function printDate(){
@@ -198,14 +199,16 @@ $(document).ready(() => {
             hourlyPoints[i].x = i*20;
         }
         $("#hourlyMinMax").text(maxminMessage); 
-        hourlyChartRect = $('#hourlyTemps')[0].getBoundingClientRect();
+        placeMinMax(); 
+    }
+    function placeMinMax(){
+        var hourlyChartRect = $('#hourlyTemps')[0].getBoundingClientRect();
         var svgChart = $(".chart")[0].getBoundingClientRect();
         var hourlyBot = hourlyChartRect.bottom;
         var svgBot    = svgChart.bottom;
         var diff = svgBot-hourlyBot;
         $('.chart').css("width", hourlyChartRect.width);
         $('#hourlyMinMax').css("top", hourlyBot + (diff/2));
-
     }
     function getMaxTemp(hourly){
         var max = -99;
