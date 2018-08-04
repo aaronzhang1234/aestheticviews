@@ -6,7 +6,7 @@ $(document).ready(() => {
     var rainInterval;
     var rainArray;
     setInterval(printDate, 1000);
-    setInterval(getNewData, 1000*60*10); 
+    setInterval(getNewData, 1000*60*5); 
     getNewData();
 
     $(window).on('resize', function(){
@@ -20,24 +20,43 @@ $(document).ready(() => {
     }
 
     function getNewData(){
-        if(navigator.geolocation)
+        if(navigator.geolocation) 
         {
-            console.log("hello");
             navigator.geolocation.getCurrentPosition(showPosition, errored);
         }
+        console.log("failed");
     }
     function showPosition(position){
+       console.log("Made it");
        var lati = position.coords.latitude;
        var longi = position.coords.longitude;
-       $.getJSON("config.json", function(data){
-           var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + lati + "," + longi;
+       getWebsiteJSON(lati, longi);
+    }
+    function errored(){
+        var latLongAPI = fuckCors + "http://ipinfo.io/geo";
+        console.log(latLongAPI);
+        $.getJSON(latLongAPI, function(data){
+            console.log(data.loc);
+            getWebsiteJSON2(data.loc);
+        });
+    } 
+    function getWebsiteJSON2(loc){
+        $.getJSON("config.json", function(data){
+           var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + loc;
            var darkSkyURL = fuckCors + darkSkyURL; 
+           console.log(darkSkyURL);
            getForecast(darkSkyURL); 
        });
     }
-    function errored(){
-        console.log("broken");
-    } 
+    function getWebsiteJSON(latitude, longitude){
+        $.getJSON("config.json", function(data){
+           var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + latitude + "," + longitude;
+           var darkSkyURL = fuckCors + darkSkyURL; 
+           console.log(darkSkyURL);
+           getForecast(darkSkyURL); 
+       });
+ 
+    }
     function getForecast(darkSkyURL){
         $.getJSON(darkSkyURL, function(data)
         {
