@@ -24,15 +24,20 @@ $(document).ready(() => {
         {
             navigator.geolocation.getCurrentPosition(showPosition, errored);
         }
-        console.log("failed");
+        else
+        {
+            console.log("Could not get Navigator Geolocation");
+            errored();
+        }
     }
     function showPosition(position){
-       console.log("Made it");
+       console.log("Got Lat and Long from navigator Position");
        var lati = position.coords.latitude;
        var longi = position.coords.longitude;
        getWebsiteJSON(lati, longi);
     }
     function errored(){
+        console.log("Got lat and Long from API");
         var latLongAPI = fuckCors + "http://ipinfo.io/geo";
         console.log(latLongAPI);
         $.getJSON(latLongAPI, function(data){
@@ -91,7 +96,7 @@ $(document).ready(() => {
         updateTemperature(rightNow);
         updateSkyColor(rightNow, today);
         updateRain(rightNow.precipIntensity*10000);
-        console.log(rightNow.precipIntensity*10000);
+        updateWind(rightNow.windSpeed);
         var numOfClouds = Math.ceil((rightNow.cloudCover) *100)*2;
         if(numOfClouds > currentClouds+5 || numOfClouds < currentClouds-5){
             currentClouds = numOfClouds;
@@ -324,6 +329,40 @@ $(document).ready(() => {
                 rainDroplet.x = Math.random() * rainWidth;
                 rainDroplet.y = -20;
             }
+        }
+    }
+    function updateWind(windSpeedMS){
+        windSpeedKH = windSpeedMS * 3.6;
+        var beaufortScale = getBeaufort(windSpeedKH);
+
+    }
+    function getBeaufort(windSpeed){
+        if(windSpeed< 1){
+            return 0;
+        }else if(windSpeed<5){
+            return 1;
+        }else if(windSpeed<11){
+            return 2;
+        }else if(windSpeed<19){
+            return 3;
+        }else if(windSpeed<28){
+            return 4;
+        }else if(windSpeed<38){
+            return 5;
+        }else if(windSpeed<49){
+            return 6;
+        }else if(windSpeed<61){
+            return 7;
+        }else if(windSpeed<74){
+            return 8;
+        }else if(windSpeed<88){
+            return 9;
+        }else if(windSpeed<102){
+            return 10;
+        }else if(windSpeed<117){
+            return 11;
+        }else{
+            return 12;
         }
     }
 });
