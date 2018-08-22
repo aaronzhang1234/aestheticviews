@@ -169,6 +169,7 @@ $(document).ready(() => {
         if(sunIsDown(today))
         {
             skyDisplay.css("background-color","#061928");
+             $('#raining').css("background-color", '#061928');
         }
         else
         {
@@ -187,6 +188,7 @@ $(document).ready(() => {
             var skyColorBasedOnClouds = Math.floor(cloudCover*10);
             var currentSkyColor = skyColors[skyColorBasedOnClouds];
             skyDisplay.css("background-color","#"+currentSkyColor);
+            $('#raining').css("background-color", '#' + currentSkyColor);
         }
     }
     function updateTemperature(rightNow){
@@ -277,7 +279,6 @@ $(document).ready(() => {
         var canvas2D = canvas.getContext('2d');
         canvas2D.lineWidth = 1;
         canvas2D.lineCap = 'round';
-//        canvas2D.strokeStyle = 'rgba(174, 194, 224, 0.5)';
         var rainHeight = window.innerHeight;
         var rainWidth = window.innerWidth;
         rainArray = getRainArray(rainIntense, rainHeight, rainWidth);
