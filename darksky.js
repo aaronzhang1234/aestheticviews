@@ -39,9 +39,7 @@ $(document).ready(() => {
     function errored(){
         console.log("Got lat and Long from API");
         var latLongAPI = fuckCors + "http://ipinfo.io/geo";
-        console.log(latLongAPI);
         $.getJSON(latLongAPI, function(data){
-            console.log(data.loc);
             getWebsiteJSON2(data.loc);
         });
     } 
@@ -49,7 +47,6 @@ $(document).ready(() => {
         $.getJSON("config.json", function(data){
            var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + loc;
            var darkSkyURL = fuckCors + darkSkyURL; 
-           console.log(darkSkyURL);
            getForecast(darkSkyURL); 
        });
     }
@@ -57,7 +54,6 @@ $(document).ready(() => {
         $.getJSON("config.json", function(data){
            var darkSkyURL = "https://api.darksky.net/forecast/" + data.darkskykey + "/" + latitude + "," + longitude;
            var darkSkyURL = fuckCors + darkSkyURL; 
-           console.log(darkSkyURL);
            getForecast(darkSkyURL); 
        });
  
@@ -70,8 +66,6 @@ $(document).ready(() => {
             var hourly = data.hourly.data;
             dailyInfo = today;
             currentInfo = rightNow;
-            console.log(today);
-            console.log(rightNow);     
             updateSunLocation(rightNow, today);
             updateWeather(rightNow, today);
             updateHourly(hourly);
@@ -206,9 +200,15 @@ $(document).ready(() => {
         $('#skyDisplay').append(cloudImage);
         cloudImage = $('#'+cloudID);
         var cloudHorzPos = (Math.random() * 20) +40;
-        var cloudVertPos = (Math.random() * 100);
+        var cloudVertPos = (Math.random() * 110);
+        var cloudSpeed = (Math.random() * 40)+ 80;
+        var cloudDelay = -((Math.random() * 100) + 1);
         cloudImage.css("top", cloudHorzPos + "vh");
         cloudImage.css("left", cloudVertPos + "vw");
+        cloudImage.css("animation-name", 'marquee');
+        cloudImage.css("animation-duration", cloudSpeed+'s');
+        cloudImage.css("animation-delay", cloudDelay + 's');
+        cloudImage.css("animation-timing-function", 'linear');
     }
     function updateHourly(hourly){
         var hourlyChart = $('#hourlyTemps');
@@ -287,13 +287,15 @@ $(document).ready(() => {
         var rainHeight = window.innerHeight;
         var rainWidth = window.innerWidth;
         rainArray = getRainArray(rainIntense, rainHeight, rainWidth);
-        if(rainInterval){
+        if(rainIntense){
+            clearInterval(rainInterval);
+            rainInterval = setInterval(placeRain, 10, canvas2D, rainHeight, rainWidth);
             clearInterval(rainInterval);
         }
-        else
+        else if(rainInterval)
         {
+            clearInterval(rainInterval);
         }
-        rainInterval = setInterval(placeRain, 10, canvas2D, rainHeight, rainWidth);
     }
     function getRainArray(rainIntense, rainHeight, rainWidth){
         var rainArrayTemp = [];
@@ -319,7 +321,8 @@ $(document).ready(() => {
         }
         moveRain(rainHeight, rainWidth);
     }
-    function moveRain(rainHeight, rainWidth ){
+    function moveRain(rainHeight, rainWidth )
+    {
         for(var i = 0; i<rainArray.length; i++)
         {
             var rainDroplet = rainArray[i];
@@ -333,8 +336,8 @@ $(document).ready(() => {
     }
     function updateWind(windSpeedMS){
         windSpeedKH = windSpeedMS * 3.6;
-        var beaufortScale = getBeaufort(windSpeedKH);
-
+        var beaufortScale = getBeaufort(windSpeedKH); 
+        console.log(beaufortScale);
     }
     function getBeaufort(windSpeed){
         if(windSpeed< 1){

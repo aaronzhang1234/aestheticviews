@@ -64,7 +64,8 @@ svg.chart{
     position:absolute;
     width:5vw;
     height:auto;
-    animation: marquee 15s linear infinite;
+    animation-name: marquee;
+    animation-iteration-count: infinite;
 }
 #hourlyTemps{
     stroke:black;
@@ -76,5 +77,9 @@ svg.chart{
     background-color:#061928;
     height:100vh;
     width:100vw;
+}
+@keyframes marquee{
+    0% {left:0vw;}
+    100% {left:100vw;}
 }
 
