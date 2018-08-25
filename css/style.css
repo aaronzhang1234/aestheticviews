@@ -18,7 +18,6 @@ span#centersun{
     position:absolute;
     height:2vw;
     width:2vw;
-    background-color:black;
     border-radius:50%;
     display:inline-block;
     text-align:center;
@@ -30,6 +29,7 @@ img#sunImage{
     height:auto;
 }
 img#moonImage{
+    z-index:2;
     position:absolute;
     width:5vw;
     height:auto;
@@ -61,6 +61,7 @@ svg.chart{
     border-bottom: 2px dotted #555;
 }
 .cloud{
+    z-index:1;
     position:absolute;
     width:5vw;
     height:auto;
@@ -79,7 +80,7 @@ svg.chart{
     width:100vw;
 }
 @keyframes marquee{
-    0% {left:0vw;}
+    0% {left:-5vw;}
     100% {left:100vw;}
 }
 

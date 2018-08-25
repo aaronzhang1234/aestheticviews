@@ -264,7 +264,6 @@ $(document).ready(() => {
         {
             $("#time").css("color", "white");
             $("#temperature").css("color", "white");
-            $("#centersun").css("background-color","white");
             $("#hourlyTemps").css("stroke","white");
             $('#hourlyMinMax').css("color", "white");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
@@ -273,7 +272,6 @@ $(document).ready(() => {
         {
             $("#time").css("color","black");
             $("#temperature").css("color","black");
-            $("#centersun").css("background-color","black");
             $("#hourlyTemps").css("stroke","black");
             $('#hourlyMinMax').css("color", "black");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
