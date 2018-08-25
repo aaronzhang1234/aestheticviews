@@ -15,7 +15,7 @@ $(document).ready(() => {
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
         placeMinMax();
-        placeTrees();
+        placeStaticElements();
     });
 
     function printDate(){
@@ -29,21 +29,14 @@ $(document).ready(() => {
         $('.trees').remove();
         var ground = $('#groundDisplay');
         var viewportHeightPX = $(window).height();
-        var treeHeight = viewportHeightPX * .535;
-        var i = 0;
-        for(;i<100;i++){
+        var treeHeight = viewportHeightPX * .6;
+        var treeHeightDifference = (viewportHeightPX * .4)/300;        
+        console.log('hello');
+        for(var i = 0; i < 250; i++){ 
+            console.log('hello');
             var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
             ground.append(treeImage); 
-            var treeImage = $('#tree'+i);
-            treeImage.css('top', treeHeight);
-            treeImage.css('left', Math.random()* viewportWidthPX);
-        }
-        var treeHeightDifference = (viewportHeightPX * .4)/300;
-        
-        for(; i<250; i++){ 
-            var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
-            ground.append(treeImage); 
-            var imageWidth = ((i-100) * .1) + 5;
+            var imageWidth = (i * .1) + 5;
             var treeImage = $('#tree'+i);
             treeImage.css('top',treeHeight);
             treeHeightInPath = (viewportHeightPX*.4) - (viewportHeightPX - treeHeight);
@@ -256,7 +249,7 @@ $(document).ready(() => {
         var cloudImage = "<img class='cloud' id='"+ cloudID +"' src='images/cloud.png'></img>";
         $('#skyDisplay').append(cloudImage);
         cloudImage = $('#'+cloudID);
-        var cloudHorzPos = (Math.random() * 60);
+        var cloudHorzPos = (Math.random() * 40);
         var cloudVertPos = (Math.random() * 110);
         var cloudSpeed = (Math.random() * 40)+ 80;
         var cloudDelay = -((Math.random() * 100) + 1);
