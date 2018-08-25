@@ -15,6 +15,7 @@ $(document).ready(() => {
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
         placeMinMax();
+        placeTrees();
     });
 
     function printDate(){
