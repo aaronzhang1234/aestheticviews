@@ -5,14 +5,16 @@ html,body{
 }
 h1{
     position:relative;
-    z-index: 2;
+    z-index: 5;
     font-size:7vh;
+    font-family: 'Lato', sans-serif;
+    text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 div#skyDisplay{
-    z-index : -1;
+    z-index:0;
     position:relative;
     text-align:center;
-    height:100vh;
+    height:70vh;
 }
 span#centersun{
     position:absolute;
@@ -25,6 +27,7 @@ span#centersun{
 }
 img#sunImage{
     position:absolute;
+    z-index:3;
     width:5vw;
     height:auto;
 }
@@ -34,14 +37,8 @@ img#moonImage{
     width:5vw;
     height:auto;
 }
-h1#temperature{
-    font-family: 'Lato', sans-serif;
-}
-h1#time{
-    font-family: 'Lato', sans-serif;
-}
 h2{
-    z-index:2;
+    z-index:5;
 }
 h2#hourlyMinMax{
     position:absolute;
@@ -51,7 +48,7 @@ h2#hourlyMinMax{
     margin:auto;
 }
 svg.chart{
-    z-index : 2;
+    z-index : 5;
     position:absolute;
     top = 70vh;
     left:0;
@@ -61,7 +58,7 @@ svg.chart{
     border-bottom: 2px dotted #555;
 }
 .cloud{
-    z-index:1;
+    z-index:4;
     position:absolute;
     width:5vw;
     height:auto;
@@ -69,10 +66,12 @@ svg.chart{
     animation-iteration-count: infinite;
 }
 #hourlyTemps{
+    z-index:5
     stroke:black;
 }
 #raining{ 
     position:absolute;
+    z-index:-1;
     right:0;
     bottom:0;
     background-color:#061928;
@@ -83,4 +82,22 @@ svg.chart{
     0% {left:-5vw;}
     100% {left:100vw;}
 }
-
+div#groundDisplay{
+    height:40vh;
+    z-index:4;
+    background-color:#395D33;	
+}
+div#dirtPath{
+    margin:auto;
+    text-align:center;
+    border-bottom: 30vh solid #9b7653;
+    border-left: 10vh solid transparent;
+    border-right: 10vh solid transparent;
+    height:0;
+    width:30vw;
+}
+.trees{
+    z-index: 5;
+    position:absolute;
+    width:10vw;
+}

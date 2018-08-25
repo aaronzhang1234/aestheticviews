@@ -5,10 +5,13 @@ $(document).ready(() => {
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
     var rainInterval;
     var rainArray;
+    var viewportHeightPX = $(window).height();
+    var viewportWidthPX = $(window).width();
+
     setInterval(printDate, 1000);
     setInterval(getNewData, 1000*60*5); 
     getNewData();
-
+    placeStaticElements(); 
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
         placeMinMax();
@@ -18,7 +21,60 @@ $(document).ready(() => {
         var today = new Date().toLocaleTimeString();
         $('#time').text(today);
     }
-
+    function placeStaticElements(){
+        placeTrees();    
+    }
+    function placeTrees(){  
+        $('.trees').remove();
+        var ground = $('#groundDisplay');
+        var viewportHeightPX = $(window).height();
+        var treeHeight = viewportHeightPX * .535;
+        var i = 0;
+        for(;i<100;i++){
+            var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
+            ground.append(treeImage); 
+            var treeImage = $('#tree'+i);
+            treeImage.css('top', treeHeight);
+            treeImage.css('left', Math.random()* viewportWidthPX);
+        }
+        var treeHeightDifference = (viewportHeightPX * .4)/300;
+        
+        for(; i<250; i++){ 
+            var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
+            ground.append(treeImage); 
+            var imageWidth = ((i-100) * .1) + 5;
+            var treeImage = $('#tree'+i);
+            treeImage.css('top',treeHeight);
+            treeHeightInPath = (viewportHeightPX*.4) - (viewportHeightPX - treeHeight);
+            treeImage.css('width', imageWidth+'vw');
+            var treeWidth = treeImage.width();
+            treeImage.css('left', getLeft(treeHeightInPath, treeWidth));           
+            treeHeight = treeHeight + treeHeightDifference; 
+        }
+        
+    }
+    function getLeft(height, width){
+        var dirtPath = $('#dirtPath'); 
+        var rectFullLength = dirtPath.outerWidth();
+        var topLength = viewportWidthPX * .3;
+        var rectHeight = viewportHeightPX * .3;
+        var a = (rectFullLength - topLength)/2;
+        var tanned = rectHeight/a;
+        var rectSides = height/tanned;    
+        var sidePath = (topLength/2) + rectSides;
+        var halfWindow = viewportWidthPX * .5;
+        var leftSidePath = halfWindow - sidePath;
+        var rightSidePath  = halfWindow + sidePath;
+        var treeLeft = Math.random() * viewportWidthPX;
+        var treeWidthHalf = width/2;
+        while((treeLeft > leftSidePath) && (treeLeft < rightSidePath))
+        {
+            console.log("hello");
+            treeLeft = Math.random() * viewportWidthPX;
+        }
+        
+        return treeLeft - treeWidthHalf;
+    }
     function getNewData(){
         if(navigator.geolocation) 
         {
@@ -199,7 +255,7 @@ $(document).ready(() => {
         var cloudImage = "<img class='cloud' id='"+ cloudID +"' src='images/cloud.png'></img>";
         $('#skyDisplay').append(cloudImage);
         cloudImage = $('#'+cloudID);
-        var cloudHorzPos = (Math.random() * 20) +40;
+        var cloudHorzPos = (Math.random() * 60);
         var cloudVertPos = (Math.random() * 110);
         var cloudSpeed = (Math.random() * 40)+ 80;
         var cloudDelay = -((Math.random() * 100) + 1);
@@ -285,10 +341,10 @@ $(document).ready(() => {
         var rainHeight = window.innerHeight;
         var rainWidth = window.innerWidth;
         rainArray = getRainArray(rainIntense, rainHeight, rainWidth);
+        console.log(rainIntense);
         if(rainIntense){
             clearInterval(rainInterval);
             rainInterval = setInterval(placeRain, 10, canvas2D, rainHeight, rainWidth);
-            clearInterval(rainInterval);
         }
         else if(rainInterval)
         {
