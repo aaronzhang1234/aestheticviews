@@ -28,46 +28,37 @@ $(document).ready(() => {
     function placeTrees(){  
         $('.trees').remove();
         var ground = $('#groundDisplay');
-        var viewportHeightPX = $(window).height();
-        var treeHeight = viewportHeightPX * .6;
-        var treeHeightDifference = (viewportHeightPX * .4)/300;        
-        console.log('hello');
-        for(var i = 0; i < 250; i++){ 
-            console.log('hello');
+        var treeBottom = convertVWtoPXHeight(29);
+        var treeHeightDifference = convertVWtoPXHeight(50)/250;        
+        for(var i = 0; i < 250; i++){  
             var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
             ground.append(treeImage); 
-            var imageWidth = (i * .1) + 5;
+            treeWidthVW = 20 - (i * .05);
             var treeImage = $('#tree'+i);
-            treeImage.css('top',treeHeight);
-            treeHeightInPath = (viewportHeightPX*.4) - (viewportHeightPX - treeHeight);
-            treeImage.css('width', imageWidth+'vw');
-            var treeWidth = treeImage.width();
-            treeImage.css('left', getLeft(treeHeightInPath, treeWidth));           
-            treeHeight = treeHeight + treeHeightDifference; 
-        }
-        
+            treeImage.css('bottom',treeBottom);
+            treeImage.css('width', treeWidthVW+'vw');
+            var treeWidthPX = convertVWtoPXWidth(treeWidthVW);            
+            treeImage.css('left', getLeft(treeBottom, treeWidthPX));           
+            treeBottom = treeBottom - treeHeightDifference;   
+        } 
     }
     function getLeft(height, width){
         var dirtPath = $('#dirtPath'); 
-        var rectFullLength = dirtPath.outerWidth();
-        var topLength = viewportWidthPX * .3;
-        var rectHeight = viewportHeightPX * .3;
-        var a = (rectFullLength - topLength)/2;
-        var tanned = rectHeight/a;
-        var rectSides = height/tanned;    
-        var sidePath = (topLength/2) + rectSides;
-        var halfWindow = viewportWidthPX * .5;
-        var leftSidePath = halfWindow - sidePath;
-        var rightSidePath  = halfWindow + sidePath;
+        var trapFullLength = dirtPath.outerWidth();
+        var trapTopLength =  convertVWtoPXWidth(30);
+        var trapHeight = dirtPath.outerHeight();
+        var a = (trapFullLength - trapTopLength)/2;
+        var tanned = trapHeight/a;
+        var trapSides = a - (height/tanned);    
+        var sidePath = (trapTopLength/2) + trapSides;
+        var leftSidePath   = convertVWtoPXWidth(50) - sidePath;
+        var rightSidePath  = convertVWtoPXWidth(50) + sidePath;
         var treeLeft = Math.random() * viewportWidthPX;
-        var treeWidthHalf = width/2;
         while((treeLeft > leftSidePath) && (treeLeft < rightSidePath))
         {
-            console.log("hello");
             treeLeft = Math.random() * viewportWidthPX;
-        }
-        
-        return treeLeft - treeWidthHalf;
+        }        
+        return treeLeft - (width/2);
     }
     function getNewData(){
         if(navigator.geolocation) 
@@ -207,7 +198,7 @@ $(document).ready(() => {
             sunHeight = Math.sqrt((Math.pow(hypot,2)-Math.pow(sunLength,2)));
         }
         var sunImage = "<img id='sunImage' src='images/sun.png'></img>";
-        $('body').append(sunImage); 
+        $('#skyDisplay').append(sunImage); 
         var killme = $('#sunImage');
         var sunWidth = killme.width()/2;
         killme.css("top",centerPos.top-sunHeight*50);
@@ -334,8 +325,7 @@ $(document).ready(() => {
         canvas2D.lineCap = 'round';
         var rainHeight = window.innerHeight;
         var rainWidth = window.innerWidth;
-        rainArray = getRainArray(rainIntense, rainHeight, rainWidth);
-        console.log(rainIntense);
+        rainArray = getRainArray(rainIntense, rainHeight, rainWidth);        
         if(rainIntense){
             clearInterval(rainInterval);
             rainInterval = setInterval(placeRain, 10, canvas2D, rainHeight, rainWidth);
@@ -385,7 +375,6 @@ $(document).ready(() => {
     function updateWind(windSpeedMS){
         windSpeedKH = windSpeedMS * 3.6;
         var beaufortScale = getBeaufort(windSpeedKH); 
-        console.log(beaufortScale);
     }
     function getBeaufort(windSpeed){
         if(windSpeed< 1){
@@ -415,5 +404,11 @@ $(document).ready(() => {
         }else{
             return 12;
         }
+    }
+    function convertVWtoPXWidth(vwUnit){
+        return viewportWidthPX * (vwUnit/100);
+    }
+    function convertVWtoPXHeight(vwUnit){
+        return viewportHeightPX * (vwUnit/100);
     }
 });

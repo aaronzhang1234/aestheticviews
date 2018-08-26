@@ -27,7 +27,7 @@ span#centersun{
 }
 img#sunImage{
     position:absolute;
-    z-index:3;
+    z-index:2;
     width:5vw;
     height:auto;
 }
