@@ -1,4 +1,5 @@
 $(document).ready(() => { 
+
     var dailyInfo; 
     var currentInfo;
     var currentClouds = 0;
@@ -23,7 +24,21 @@ $(document).ready(() => {
         $('#time').text(today);
     }
     function placeStaticElements(){
+//        placeFireFly();
         placeTrees();    
+    }
+    function placeFireFly(){
+        var firefly = $('#fireflyOrig');
+        for(var i = 1; i<10; i++){
+            var innerFly = "<div class='firefly' id='fireflyLayer"+i+ "'></div>";
+            firefly.append(innerFly);
+            var innerFly = $('#fireflyLayer' + i); 
+            innerFly.css('background', 'rgba(255,255,0,'+ i/10+')');
+            var diameter = (11-i)/4;
+            innerFly.css('width', diameter+'vw');
+            innerFly.css('height', diameter+'vw');
+            firefly = innerFly;
+        }
     }
     function placeTrees(){  
         $('.trees').remove();
@@ -308,6 +323,9 @@ $(document).ready(() => {
             $("#hourlyTemps").css("stroke","white");
             $('#hourlyMinMax').css("color", "white");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
+            $('groundDisplay').css("filter", "brightness(80%)");
+            $('.trees').css("filter", "brightness(20%)");
+            $('#dirtPath').css("filter", "brightness(20%)");
         }
         else
         {
@@ -316,6 +334,9 @@ $(document).ready(() => {
             $("#hourlyTemps").css("stroke","black");
             $('#hourlyMinMax').css("color", "black");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
+            $('groundDisplay').css("filter", "");
+            $('.trees').css("filter", "");
+            $('#dirtPath').css("filter", "");
         }
     }
     function updateRain(rainIntense){
