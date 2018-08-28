@@ -60,17 +60,14 @@ $(document).ready(() => {
     } 
     function getFireflyAnimation(index, origLeft)
     {
-        var movement = (Math.random() * viewportWidthPX)/2;
-        var movementDirection = Math.random()>.5?-1:1;
-        movement = movement * movementDirection;
-        var fireflyMoveTo = origLeft + movement;
-        console.log(origLeft);
-        console.log(fireflyMoveTo);
         var animationName = 'fireflyAnimation'+index;
+        var leftOrRight = Math.random()<.5?1:-1;
+        var movement = (Math.random() * viewportWidthPX)/2; 
+        movement = origLeft + (movement * leftOrRight)
         $.keyframe.define({
            name  : animationName, 
-           from  : {left : origLeft+'px'},
-           to    : {left: fireflyMoveTo+'px'}
+           from  : {'transform' : 'translateX('+origLeft+'px)'},
+           to    : {'transform' : 'translateX('+movement+'px)'}
         });
         return animationName;
     }

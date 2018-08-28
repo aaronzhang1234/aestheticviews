@@ -108,6 +108,7 @@ div#dirtPath{
     align-items:center;
 }
 *[id^='fireflyOrig']{
+    transform : translateZ(0);
     position:absolute;
     border-radius:50%;
 }
