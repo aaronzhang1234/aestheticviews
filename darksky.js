@@ -35,23 +35,45 @@ $(document).ready(() => {
            firefly = $('#fireflyOrig'+p);
            createFirefly(firefly);
            var fireflyTop = 100-(Math.random() * 40);
-           var fireflyLeft = getLeft(fireflyTop, 0);
+           var fireflyLeft = Math.random() * viewportWidthPX ;
            var fireflyTime = (Math.random() * 2) + 3;
            var animationDelay = Math.random() * -10;
            var fireflyZIndex = Math.floor(Math.random() * 150)+40;
+           var fireflyAnimationName = getFireflyAnimation(p, fireflyLeft);
+           var animationTime     = (Math.random()* 30)+10;
            firefly.css('top', fireflyTop+'vh');
-           firefly.css('right', fireflyLeft);
-           firefly.css('animation-duration', fireflyTime+'s');
-           firefly.css('animation-delay',animationDelay+'s');
+           firefly.css('left', fireflyLeft);
            firefly.css('z-index', fireflyZIndex);
-           var rightOrLeft = Math.random() > .5?'-':'+';
-           var animationDistance = (Math.random() * viewportWidthPX)*2;
-           var animationTime     = (Math.random() + 3)* 10000;
-           var animationDirection = rightOrLeft+"="+animationDistance+'px';
-           console.log(animationDirection);
-           firefly.animate({"left": animationDirection}, animationTime);
+           firefly.playKeyframe([
+               {
+                   name : 'glowing',
+                   duration : fireflyTime+'s',
+                   delay : animationDelay+'s',
+                   iterationCount: 'infinite',
+                   timingFunction:'linear'
+               },{
+                   name : fireflyAnimationName,
+                   duration: animationTime + 's'
+               }
+           ], console.log("hello"));
         }
     } 
+    function getFireflyAnimation(index, origLeft)
+    {
+        var movement = (Math.random() * viewportWidthPX)/2;
+        var movementDirection = Math.random()>.5?-1:1;
+        movement = movement * movementDirection;
+        var fireflyMoveTo = origLeft + movement;
+        console.log(origLeft);
+        console.log(fireflyMoveTo);
+        var animationName = 'fireflyAnimation'+index;
+        $.keyframe.define({
+           name  : animationName, 
+           from  : {left : origLeft+'px'},
+           to    : {left: fireflyMoveTo+'px'}
+        });
+        return animationName;
+    }
     function createFirefly(firefly){
         for(var i = 1; i<=10; i++){
             var innerFly = "<div class='firefly' id='fireflyLayer"+i+ "'></div>";
@@ -339,7 +361,6 @@ $(document).ready(() => {
             }
         }
         return min;
-
     }
     function shiftText(today){         
         var canvas = $('#raining')[0];

@@ -110,9 +110,6 @@ div#dirtPath{
 *[id^='fireflyOrig']{
     position:absolute;
     border-radius:50%;
-    animation-name: glowing;    
-    animation-iteration-count: infinite;
-    animation-timing-function:linear;
 }
 #fireflyLayer1{
    background:rgba(255,255,0, .1); 
