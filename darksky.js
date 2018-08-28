@@ -6,6 +6,7 @@ $(document).ready(() => {
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
     var rainInterval;
     var rainArray;
+    var fireflyInterval;
     var viewportHeightPX = $(window).height();
     var viewportWidthPX = $(window).width();
 
@@ -16,20 +17,43 @@ $(document).ready(() => {
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
         placeMinMax();
-        placeStaticElements();
-    });
+   });
 
     function printDate(){
         var today = new Date().toLocaleTimeString();
         $('#time').text(today);
     }
-    function placeStaticElements(){
-//        placeFireFly();
+    function placeStaticElements(){ 
         placeTrees();    
     }
-    function placeFireFly(){
-        var firefly = $('#fireflyOrig');
-        for(var i = 1; i<10; i++){
+    function placeFireflies(){
+        $('div[id^="fireflyOrig"]').remove();
+        for(var p = 0; p < 30; p++)
+        {
+           var firefly = "<div class='firefly' id='fireflyOrig"+ p +"'></div>"; 
+           $('#groundDisplay').prepend(firefly); 
+           firefly = $('#fireflyOrig'+p);
+           createFirefly(firefly);
+           var fireflyTop = 100-(Math.random() * 40);
+           var fireflyLeft = getLeft(fireflyTop, 0);
+           var fireflyTime = (Math.random() * 2) + 3;
+           var animationDelay = Math.random() * -10;
+           var fireflyZIndex = Math.floor(Math.random() * 150)+40;
+           firefly.css('top', fireflyTop+'vh');
+           firefly.css('right', fireflyLeft);
+           firefly.css('animation-duration', fireflyTime+'s');
+           firefly.css('animation-delay',animationDelay+'s');
+           firefly.css('z-index', fireflyZIndex);
+           var rightOrLeft = Math.random() > .5?'-':'+';
+           var animationDistance = (Math.random() * viewportWidthPX)*2;
+           var animationTime     = (Math.random() + 3)* 10000;
+           var animationDirection = rightOrLeft+"="+animationDistance+'px';
+           console.log(animationDirection);
+           firefly.animate({"left": animationDirection}, animationTime);
+        }
+    } 
+    function createFirefly(firefly){
+        for(var i = 1; i<=10; i++){
             var innerFly = "<div class='firefly' id='fireflyLayer"+i+ "'></div>";
             firefly.append(innerFly);
             var innerFly = $('#fireflyLayer' + i); 
@@ -45,7 +69,7 @@ $(document).ready(() => {
         var ground = $('#groundDisplay');
         var treeBottom = convertVWtoPXHeight(29);
         var treeHeightDifference = convertVWtoPXHeight(50)/250;        
-        for(var i = 0; i < 250; i++){  
+        for(var i = 0; i < 200; i++){  
             var treeImage = "<img class='trees' id='tree"+ i +"' src='images/tree.png' />";
             ground.append(treeImage); 
             treeWidthVW = 20 - (i * .05);
@@ -53,6 +77,7 @@ $(document).ready(() => {
             treeImage.css('bottom',treeBottom);
             treeImage.css('width', treeWidthVW+'vw');
             var treeWidthPX = convertVWtoPXWidth(treeWidthVW);            
+            treeImage.css('z-index',i+5);
             treeImage.css('left', getLeft(treeBottom, treeWidthPX));           
             treeBottom = treeBottom - treeHeightDifference;   
         } 
@@ -132,13 +157,16 @@ $(document).ready(() => {
         $('#sunImage').remove();
         $('#moonImage').remove();
         var center = $('#centersun');    
-        var centerPos = center.position(); 
+        var centerPos = center.position()            
+        clearInterval(fireflyInterval); 
         if(sunIsDown(today))
-        {  
+        {   
+            placeFireflies();
+            fireflyInterval = setInterval(placeFireflies, 1000*30);
             placeMoon();
         }
         else
-        {
+        { 
             placeSun(rightNow, today);
         }
     }
@@ -318,6 +346,7 @@ $(document).ready(() => {
         var canvas2D = canvas.getContext('2d');
         if(sunIsDown(today))
         {
+            $('#groundDisplay').css('background-color','#013220');
             $("#time").css("color", "white");
             $("#temperature").css("color", "white");
             $("#hourlyTemps").css("stroke","white");
@@ -329,6 +358,7 @@ $(document).ready(() => {
         }
         else
         {
+            $('#groundDisplay').css('background-color','#0395D33');
             $("#time").css("color","black");
             $("#temperature").css("color","black");
             $("#hourlyTemps").css("stroke","black");

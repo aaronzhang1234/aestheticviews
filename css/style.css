@@ -1,6 +1,5 @@
 html,body{
-    margin:0;
-    height:100%;
+    margin:0; height:100%;
     overflow:hidden;
 }
 h1{
@@ -102,17 +101,77 @@ div#dirtPath{
     width:10vw;
 }
 .firefly{
+    position:absolute;
     border-radius: 50%;
-    z-index: 9;
     display:flex; 
     justify-content:center;
     align-items:center;
 }
-#fireflyOrig{
+*[id^='fireflyOrig']{
     position:absolute;
     border-radius:50%;
-    z-index:9;
-    background: rgba(255,255,0,.01);
-    width: 12vw;
-    height:12vw;
+    animation-name: glowing;    
+    animation-iteration-count: infinite;
+    animation-timing-function:linear;
+}
+#fireflyLayer1{
+   background:rgba(255,255,0, .1); 
+   width:2.5vw;
+   height:2.5vw;
+}
+#fireflyLayer2{
+   background:rgba(255,255,0, .2); 
+   width:2.25vw;
+   height:2.25vw;
+}
+#fireflyLayer3{
+   background:rgba(255,255,0, .3); 
+   width:2vw;
+   height:2vw;
+}
+#fireflyLayer4{
+   background:rgba(255,255,0, .4); 
+   width:1.75vw;
+   height:1.75vw;
+}
+#fireflyLayer5{
+   background:rgba(255,255,0, .5); 
+   width:1.5vw;
+   height:1.5vw;
+}
+#fireflyLayer6{
+   background:rgba(255,255,0, .6); 
+   width:1.25vw;
+   height:1.25vw;
+}
+#fireflyLayer7{
+   background:rgba(255,255,0, .7); 
+   width:1vw;
+   height:1vw;
+}
+#fireflyLayer8{
+   background:rgba(255,255,0, .8); 
+   width:.75vw;
+   height:.75vw;
+}
+#fireflyLayer9{
+   background:rgba(255,255,0, .9); 
+   width:.5vw;
+   height:.5vw;
+}
+#fireflyLayer10{
+   background:rgba(255,255,0, 1); 
+   width: .25vw;
+   height: .25vw;
+}
+@keyframes glowing{
+    0%   {
+            filter:opacity(0);
+         }
+    50%  {
+            filter:opacity(1);
+         }
+    100% {
+            filter:opacity(0);
+         }
 }
