@@ -28,7 +28,7 @@ $(document).ready(() => {
     }
     function placeFireflies(){
         $('div[id^="fireflyOrig"]').remove();
-        for(var p = 0; p < 30; p++)
+        for(var p = 0; p < 15; p++)
         {
            var firefly = "<div class='firefly' id='fireflyOrig"+ p +"'></div>"; 
            $('#groundDisplay').prepend(firefly); 
@@ -38,22 +38,24 @@ $(document).ready(() => {
            var fireflyLeft = Math.random() * viewportWidthPX ;
            var fireflyTime = (Math.random() * 2) + 3;
            var animationDelay = Math.random() * -10;
-           var fireflyZIndex = Math.floor(Math.random() * 150)+40;
-           var fireflyAnimationName = getFireflyAnimation(p, fireflyLeft);
-           var animationTime     = (Math.random()* 30)+10;
+           var fireflyZIndex = Math.floor(Math.random() * 100)+50; 
+           var animationTime = (Math.random()*60)*5 + 60;
+           var rightOrLeft = Math.random()<.5?'moveRight':'moveLeft';
+           var fireflyDelay = Math.random()*10;
            firefly.css('top', fireflyTop+'vh');
            firefly.css('left', fireflyLeft);
            firefly.css('z-index', fireflyZIndex);
            firefly.playKeyframe([
-               {
+           {
                    name : 'glowing',
                    duration : fireflyTime+'s',
                    delay : animationDelay+'s',
                    iterationCount: 'infinite',
                    timingFunction:'linear'
                },{
-                   name : fireflyAnimationName,
-                   duration: animationTime + 's'
+                   name : rightOrLeft,
+                   duration: animationTime + 's',
+                   delay : fireflyDelay+'s'
                }
            ], console.log("hello"));
         }
@@ -177,11 +179,9 @@ $(document).ready(() => {
         $('#moonImage').remove();
         var center = $('#centersun');    
         var centerPos = center.position()            
-        clearInterval(fireflyInterval); 
         if(sunIsDown(today))
         {   
             placeFireflies();
-            fireflyInterval = setInterval(placeFireflies, 1000*30);
             placeMoon();
         }
         else
@@ -308,7 +308,7 @@ $(document).ready(() => {
         var cloudDelay = -((Math.random() * 100) + 1);
         cloudImage.css("top", cloudHorzPos + "vh");
         cloudImage.css("left", cloudVertPos + "vw");
-        cloudImage.css("animation-name", 'marquee');
+        cloudImage.css("animation-name", 'moveRight');
         cloudImage.css("animation-duration", cloudSpeed+'s');
         cloudImage.css("animation-delay", cloudDelay + 's');
         cloudImage.css("animation-timing-function", 'linear');
