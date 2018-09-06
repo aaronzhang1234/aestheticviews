@@ -27,7 +27,7 @@ $(document).ready(() => {
         placeTrees();    
     }
     function placeFireflies(){
-        $('div[id^="fireflyOrig"]').remove();
+        removeFireflies();
         for(var p = 0; p < 15; p++)
         {
            var firefly = "<div class='firefly' id='fireflyOrig"+ p +"'></div>"; 
@@ -60,19 +60,6 @@ $(document).ready(() => {
            ], console.log("hello"));
         }
     } 
-    function getFireflyAnimation(index, origLeft)
-    {
-        var animationName = 'fireflyAnimation'+index;
-        var leftOrRight = Math.random()<.5?1:-1;
-        var movement = (Math.random() * viewportWidthPX)/2; 
-        movement = origLeft + (movement * leftOrRight)
-        $.keyframe.define({
-           name  : animationName, 
-           from  : {'transform' : 'translateX('+origLeft+'px)'},
-           to    : {'transform' : 'translateX('+movement+'px)'}
-        });
-        return animationName;
-    }
     function createFirefly(firefly){
         for(var i = 1; i<=10; i++){
             var innerFly = "<div class='firefly' id='fireflyLayer"+i+ "'></div>";
@@ -84,6 +71,9 @@ $(document).ready(() => {
             innerFly.css('height', diameter+'vw');
             firefly = innerFly;
         }
+    }
+    function removeFireflies(){
+        $('div[id^="fireflyOrig"]').remove();
     }
     function placeTrees(){  
         $('.trees').remove();
@@ -186,6 +176,7 @@ $(document).ready(() => {
         }
         else
         { 
+            removeFireflies();
             placeSun(rightNow, today);
         }
     }
@@ -401,6 +392,7 @@ $(document).ready(() => {
         }
         else if(rainInterval)
         {
+            canvas2D.clearRect(0, 0, rainWidth, rainHeight);
             clearInterval(rainInterval);
         }
     }
