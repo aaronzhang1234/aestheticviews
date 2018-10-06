@@ -171,12 +171,10 @@ $(document).ready(() => {
         var centerPos = center.position()            
         if(sunIsDown(today))
         {   
-            placeFireflies();
             placeMoon();
         }
         else
         { 
-            removeFireflies();
             placeSun(rightNow, today);
         }
     }
