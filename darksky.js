@@ -6,7 +6,6 @@ $(document).ready(() => {
     var fuckCors = "https://cors-anywhere.herokuapp.com/";
     var rainInterval;
     var rainArray;
-    var fireflyInterval;
     var viewportHeightPX = $(window).height();
     var viewportWidthPX = $(window).width();
 
@@ -25,55 +24,6 @@ $(document).ready(() => {
     }
     function placeStaticElements(){ 
         placeTrees();    
-    }
-    function placeFireflies(){
-        removeFireflies();
-        for(var p = 0; p < 15; p++)
-        {
-           var firefly = "<div class='firefly' id='fireflyOrig"+ p +"'></div>"; 
-           $('#groundDisplay').prepend(firefly); 
-           firefly = $('#fireflyOrig'+p);
-           createFirefly(firefly);
-           var fireflyTop = 100-(Math.random() * 40);
-           var fireflyLeft = Math.random() * viewportWidthPX ;
-           var fireflyTime = (Math.random() * 2) + 3;
-           var animationDelay = Math.random() * -10;
-           var fireflyZIndex = Math.floor(Math.random() * 100)+50; 
-           var animationTime = (Math.random()*60)*5 + 60;
-           var rightOrLeft = Math.random()<.5?'moveRight':'moveLeft';
-           var fireflyDelay = Math.random()*10;
-           firefly.css('top', fireflyTop+'vh');
-           firefly.css('left', fireflyLeft);
-           firefly.css('z-index', fireflyZIndex);
-           firefly.playKeyframe([
-           {
-                   name : 'glowing',
-                   duration : fireflyTime+'s',
-                   delay : animationDelay+'s',
-                   iterationCount: 'infinite',
-                   timingFunction:'linear'
-               },{
-                   name : rightOrLeft,
-                   duration: animationTime + 's',
-                   delay : fireflyDelay+'s'
-               }
-           ], console.log("hello"));
-        }
-    } 
-    function createFirefly(firefly){
-        for(var i = 1; i<=10; i++){
-            var innerFly = "<div class='firefly' id='fireflyLayer"+i+ "'></div>";
-            firefly.append(innerFly);
-            var innerFly = $('#fireflyLayer' + i); 
-            innerFly.css('background', 'rgba(255,255,0,'+ i/10+')');
-            var diameter = (11-i)/4;
-            innerFly.css('width', diameter+'vw');
-            innerFly.css('height', diameter+'vw');
-            firefly = innerFly;
-        }
-    }
-    function removeFireflies(){
-        $('div[id^="fireflyOrig"]').remove();
     }
     function placeTrees(){  
         $('.trees').remove();
