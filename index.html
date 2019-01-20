@@ -9,7 +9,10 @@
     <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet">
     <script src="darksky.js"></script>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script src="spotify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -39,6 +42,15 @@
         </svg> 
         <canvas id ="raining"></canvas>
         <span id = "centersun"></span>
+        <div id="spotify-info">
+            <h1 id="song-name"></h1>
+            <h2 id="song-time"></h2>
+            <span id="spotify-control-panel">
+                <button class="spotify-controls-b"><i id="spotify-prev" style="font-size:2.5em;" class="spotify-controls-i fa fa-fast-backward"></i></button>
+                <button class="spotify-controls-b"><i id="spotify-playpause" style="font-size:2.5em;" class="spotify-controls-i fa fa-play"></i></button>
+                <button class="spotify-controls-b"><i id="spotify-next" style="font-size:2.5em;" class="spotify-controls-i fa fa-fast-forward"></i></button>
+            </span>
+        </div>
     </div>
     <div id = "groundDisplay"> 
         <div id="fireflyOrig">

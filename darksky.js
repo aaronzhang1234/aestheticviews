@@ -1,5 +1,4 @@
 $(document).ready(() => { 
-
     var dailyInfo; 
     var currentInfo;
     var currentClouds = 0;
@@ -11,7 +10,7 @@ $(document).ready(() => {
 
     setInterval(printDate, 1000);
     setInterval(getNewData, 1000*60*5); 
-    getNewData();
+    setTimeout(getNewData, 2000);
     placeStaticElements(); 
     $(window).on('resize', function(){
         updateSunLocation(currentInfo,dailyInfo);
@@ -174,7 +173,7 @@ $(document).ready(() => {
         centerDiv.append(moonImage);
         var moonImage = $('#moonImage');
         var moonWidth = moonImage.width()/4;
-        var windowHeight = (window.innerHeight)/2;
+        var windowHeight = (window.innerHeight)/3;
         moonImage.css("top", windowHeight);
         moonImage.css("left", centerPos.left-moonWidth);
     }
@@ -304,26 +303,19 @@ $(document).ready(() => {
         if(sunIsDown(today))
         {
             $('#groundDisplay').css('background-color','#013220');
-            $("#time").css("color", "white");
-            $("#temperature").css("color", "white");
+            $("#time, #temperature, #hourlyMinMax, #song-name, #song-time, .spotify-controls-i").css("color", "white");
             $("#hourlyTemps").css("stroke","white");
-            $('#hourlyMinMax').css("color", "white");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
             $('groundDisplay').css("filter", "brightness(80%)");
-            $('.trees').css("filter", "brightness(20%)");
-            $('#dirtPath').css("filter", "brightness(20%)");
+            $('.trees, #dirtPath').css("filter", "brightness(20%)");
         }
         else
         {
             $('#groundDisplay').css('background-color','#0395D33');
-            $("#time").css("color","black");
-            $("#temperature").css("color","black");
+            $("#time, #temperature, #hourlyMinMax, #song-name, #song-time, .spotify-controls.i").css("color", "black");
             $("#hourlyTemps").css("stroke","black");
-            $('#hourlyMinMax').css("color", "black");
             canvas2D.strokeStyle = 'rgba(205, 212, 222, 0.5)';
-            $('groundDisplay').css("filter", "");
-            $('.trees').css("filter", "");
-            $('#dirtPath').css("filter", "");
+            $('groundDisplay, .trees, #dirtPath').css("filter", "");
         }
     }
     function updateRain(rainIntense){
